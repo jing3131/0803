@@ -82,6 +82,20 @@ T2 JOIN T1  →  每100筆資料去比對10筆資料
 
 # 結論：左邊的資料通常較短，執行速率較快
 
+// 新增單筆資料
+INSERT INTO 資料表 
+( 欄位 )
+VALUES 
+(欄位對應到的值)
+
+// 刪除資料
+＃ (DELETE FROM)但如果沒有寫 WHERE，等於刪除整份資料表內容 → 但會記得曾經的內建編號
+TRUNCATE TABLE    →  將所有資料表內容清空，不會進行LOG紀錄
+
+// 更新資料
+UPDATE 資料表
+SET 欄位名稱 ＝ (新內容), 欄位名稱 ＝ (新內容)
+WHERE 指定的目標
 
 
 // Canvas html5 
@@ -102,7 +116,20 @@ SELECT CategoryID, p.CategoryID, ProductID, ProductName, UnitPrice,
 UnitPrice-(SELECT AVG(UnitPrice) FROM products WHERE CategoryID = p.CategoryID) AS DiffPrice
 FROM products AS p
 
+＃ 4個資料表 JOIN
+SELECT DISTINCT o.CustomerID, CompanyName, od.ProductID, ProductName FROM customers AS s
+JOIN orders AS o ON o.CustomerID=s.CustomerID
+JOIN `order details` AS od ON od.OrderID=o.OrderID
+JOIN products AS p ON p.ProductID=od.ProductID
+ORDER BY CustomerID,ProductID
 
+＃ 最後10筆訂單，按照時間遞減(DESC)
+SELECT * FROM
+(
+  SELECT * FROM orders
+  ORDER BY OrderDate DESC LIMIT 10
+) AS T
+ORDER BY OrderDate
 
 
 /* 010 
@@ -343,6 +370,13 @@ select orderid, customerid from orders
   where orderid in 
   (select orderid from `order details` 
     where productid = 23 and quantity > 20)
+
+
+SELECT o.OrderID,ProductID,Quantity,CustomerID
+FROM orders o
+JOIN `order details` od ON od.OrderID=o.OrderID
+WHERE productID = 23 AND Quantity >20
+ORDER BY OrderID,ProductID
 
 
 /* 520
