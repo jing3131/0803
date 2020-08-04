@@ -13,6 +13,41 @@
 // LIMIT N(數字) or LIMIT n,m   → 列出排頭的資料(列出前N項的資料) (從n開始算，取m個值出來顯示)
 // SELECT UPDATE DELETE 都有 LIMIT子句
 // 子查詢：在查詢中，再另內嵌一個查詢，內嵌的查詢需用()框住，子查詢必須給予別名(AS)
+// AVG()
+// COUNT     → 有資料的共有幾筆
+// COUNT(*)  → 一共多少筆(包含NULL值)
+
+// GROUP BY   → 對某欄做一個群組
+SELECT AVG(UnitPrice), CategoryID FROM `products` GROUP BY CategoryID
+→ AVG算完之後用 CategoryID 做成群組
+
+AVG(UnitPrice)  CategoryID
+37.97916667     1
+23.06250000     2
+25.16000000     3
+28.73000000     4
+20.25000000     5
+54.00666667     6
+32.37000000     7
+20.68250000     8
+
+// HAVING 用來取代 WHERE 來搭配聚合函數，因為 WHERE 不能和聚合函數一起使用
+SELECT CategoryID, AVG(UnitPrice) FROM `products` 
+GROUP BY CategoryID 
+HAVING AVG(UnitPrice)>30
+
+// WITH ROLLUP    → 以最左邊欄位為一群組，做小計
+SELECT OrderID, ProductID, SUM(Quantity) FROM `order details`
+GROUP BY OrderID,ProductID WITH ROLLUP
+
+OrderID    ProductID  SUM(Quantity)
+10248       11        12
+10248       42        10
+10248       72        5
+10248       NULL      27
+
+
+
 
 // Canvas html5 
 
@@ -31,6 +66,8 @@ FROM products
 SELECT CategoryID, p.CategoryID, ProductID, ProductName, UnitPrice,
 UnitPrice-(SELECT AVG(UnitPrice) FROM products WHERE CategoryID = p.CategoryID) AS DiffPrice
 FROM products AS p
+
+
 
 
 /* 010 
@@ -194,7 +231,7 @@ SELECT COUNT(reportsto) FROM employees
 select categoryID, productID, AVG(UnitPrice)
   from products
   group by categoryID
-
+# 只有列在右邊的欄位才能?
 
 /* 340
   categoryID 是產品類別的代號, 請統計各類產品(products)的庫存成本?
