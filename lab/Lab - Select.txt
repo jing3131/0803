@@ -6,7 +6,7 @@
 // 遞減排序：DESC  遞增排序：ASC(預設)
 // 表示NULL： WHERE 欄位 IS NULL
 // DISTINCT 若有橫向紀錄完全相同，只列出一筆
-// 更改名稱：舊名稱 AS 新名稱(舊名稱,新名稱) → WHERE使用舊名稱較佳
+// 更改名稱：舊名稱 AS 新名稱(舊名稱 新名稱) → WHERE使用舊名稱較佳
 // ` ` ：裡面可以表示欄位名稱
 // Concat(字串,字串)  → 將字串相連
 // Convert(欄位名稱,變換的欄位型態)  → 轉換欄位型態
@@ -46,6 +46,41 @@ OrderID    ProductID  SUM(Quantity)
 10248       72        5
 10248       NULL      27
 
+// JOIN
+→ 用 JOIN 連接另外一個資料表
+→ 再以 ON 指定結合的條件(通常使用主鍵與外鍵指定ON條件)
+→ 欄位名稱重複，須加註資料表名稱(OR 別名)  
+
+# 公式： 
+SELECT X.欄位, Y.欄位,... 
+FROM X JOIN Y ON Y.FK = X.PX
+
+SELECT L.A,B,C FROM table1 AS L
+JOIN table2 AS R ON R.A=L.A
+
+ table1            table2                         JOIN 後的table
+ A   B  ...        C    A  ...                     A   B   C
+ A1  B1 ...        C1   A1 ...       (INNE         A1  B1  C1
+|A2  B2 ...        C2   A2 |...      JOIN)         A2  B2  C2
+ A3  B3 ...       |C3   A2 |...                    A2  B2  C3
+
+
+INNER JOIN： 兩個資料表共同擁有的顯示(交集) → 預設
+# OUTER JOIN
+LEFT (OUTER) JOIN： 以左邊表為主要顯示
+RIGHT (OUTER) JOIN： 以右邊表為主要顯示
+
+# UNION 將兩個表完全結合
+(SELECT ... FROM ...)
+UNION
+(SELECT ... FROM ...)
+
+# T1： 10筆資料
+  T2： 100筆資料      兩者 JOIN
+T1 JOIN T2  →  每10筆資料去比對100筆資料    → 載入執行時間較快
+T2 JOIN T1  →  每100筆資料去比對10筆資料
+
+# 結論：左邊的資料通常較短，執行速率較快
 
 
 
