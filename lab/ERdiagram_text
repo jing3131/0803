@@ -1,0 +1,86 @@
+# --  關聯圖
+實體Entities： 一個資料表  －> 可以分成更多細項(大分類)，有主體性
+屬性Attributes：欄位      －> 需依附在其他實體
+
+主體(物件)可以跟主體互動，屬性可能產生改變，但屬性無法跟屬性互動
+虛線：一的生命週期掌握在多的生命週期    －> 當多的生命消失時，一的生命也會消失(一無法獨立存在)
+
+# 正規化
+第一正規化：
+1. 整理出二維資料表
+2. (沒有重複的欄位        －> 從橫向看有沒有資料重複
+3. 一個欄位只放一種資料)  －> 一個欄位只賦予一個意義
+(Ex：金額＝數量＊單價 －> 欄位數量和單價就會重複出現)
+
+第二正規化：
+1. 符合第一正規化
+2. 所有的key值都需「完全相依」於主鍵  －> 從縱向看有沒有資料重複
+(概念上不完全屬於此資料表的就是部分相依 -> 將欄位另外獨立出去會較佳) 每個資料表的內容應該符合該資料表的主旨
+＊ 部分相依可能造成資料(欄位值)重複
+
+第三正規化：
+1. 符合第二正規化
+2. 沒有遞移相依(在資料表有多個部分相依，且兩者互相有關)
+
+
+＃ 多對多 －> 交叉比對再產生一個新資料表
+Ex：
+products                suppliers
+productID               supplierID
+  1                         1
+  2                         2
+  3                         3
+  4                         4
+  |                         |
+  -------------|-------------
+        products_suppliers
+psID       ProductID       supplierID        price   minQty
+ 1            p1               s1             100
+ 2            p1               s2              80
+ 3            p3               s1
+ 4
+
+
+
+
+
+
+
+-----------
+
+
+
+
+由大看到小，違反正規化，時間軸
+
+
+Timesheet (1..*)        --        (1) Invoice
+InvoiceID   (+)                 TimesheetID (-)
+
+
+
+Employee 正規化
+(Address1 Address2  City state(州) Zip(郵遞區號) )  -> 資料表 X
+Salary(-)  ->  EmployeeType : Salary(+)
+
+
+EmployeeVehicl  -> EmployeeID VehiclID
+JobTask    -> JobID TaskID
+
+
+Client
+(Address1 Address2 City state Zip) -> 資料表  X
+
+
+Timesheet -> JobID(-) TaskID(-)
+Job(project)  ->  TimesheetID(+)
+Task ->  TimesheetID(+)
+
+
+EmployeeType 1
+Employee 1..*
+
+Timesheet -  Client   多一條線
+
+
+BillableRate顧問費 BillableHours  ??

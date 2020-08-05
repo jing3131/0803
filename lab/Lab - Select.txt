@@ -98,6 +98,55 @@ UPDATE 資料表
 SET 欄位名稱 ＝ (新內容), 欄位名稱 ＝ (新內容)
 WHERE 指定的目標
 
+// 建立資料庫 (在終端機：mysql -uroot -p) (desc 資料表 －> 查看資料表)
+CREATE DATABASE 資料庫名稱(Ex: db08) default character set utf8;
+USE 資料庫;
+CREATE TABLE IF NOT EXISTS (資料庫名稱.)資料表名稱
+(
+  fid int auto_increment not null primary key,    -> 自動編號(primary key)
+  欄位名稱 欄位型態 欄位特性(可否null -> NULL/NOT NULL)
+)
+
+# 生成primary key
+fid int auto_increment not null primary key   // 在第一行寫
+id int not null primary key         // 在第一行寫
+primary key (id)          // 在最後一行附註
+
+CREATE TABLE t1(
+  id int not null,        // id int not null primary key
+  data int null,
+  primary key (id)
+);
+
+// 修改資料表結構
+- 加入新的欄位
+ALTER TABLE 資料表名稱(t1)
+ADD 欄位名稱(email) varchar(30) DEFAULT 'someone@somewhere.com'
+-> DEFAULT 預設值
+
+- 修改欄位定義
+ALTER TABLE t1
+MODIFY email varchar(40) DEFAULT 'who@where.com'
+-> 如果修改了，預設值會變回null
+
+DESCRIBE 資料表(t1)   －> 可以看到內部設定
+
+- 刪除欄位
+ALTER TABLE t1
+DROP COLUMN email;
+
+// 刪除資料表/資料庫
+DROP (資料表/資料庫)
+
+set sql_mode = 'traditional';   -> 會幫你驗證在列中新增不正確的值時，給予出錯的提示，並停止insert/update
+set sql_mode = '' -> DEFAULT
+
+// 新增索引
+CREATE INDEX 索引編號 on 資料表名稱(主排序欄位,副排序欄位,...)
+Ex: CREATE INDEX idx_tel on students(tel,name)
+-> 缺點：浪費硬碟空間，傳輸時間 (資源換速度)
+
+
 
 // Canvas html5 
 
