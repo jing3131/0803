@@ -1,6 +1,9 @@
-﻿use mysql;
+﻿flush privileges;       // 立即生效系統權限相關表
+
+use mysql;
 
 -- 請試著描述 user, db, tables_priv 等資料表的作用
+user: 使用者，以及在所有資料庫的使用權限(?
 show tables;
 
 
@@ -10,8 +13,8 @@ select host, db, user, select_priv, insert_priv, update_priv from db;
 select host, db, user, table_name, table_priv from tables_priv;
 
 
--- 新增一個新的使用者:
-grant usage on *.* to carl@'%' identified by 'Pa$$w0rd';
+-- 新增一個新的使用者:          // 不建議
+grant usage on *.* to carl@'%' identified by 'Pa$$w0rd';            // *.*  所有資料庫的所有資料表
 
 
 -- 各個記錄安全權限的資料表有何變化?
@@ -30,7 +33,7 @@ select host, db, user, table_name, table_priv from tables_priv;
 
 
 -- 下列指令可否成功執行:
-grant usage on *.* to jeremy identified by 'Pa$$w0rd';
+grant usage on *.* to jeremy identified by 'Pa$$w0rd';          // 不限使用者從哪部電腦進入
 grant usage on *.* to white;
 grant usage on *.* to Carl@'%' identified by 'Pa$$w0rd';
 

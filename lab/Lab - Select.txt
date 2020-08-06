@@ -1,4 +1,14 @@
-﻿// mac 刪除git憑證  → Key 鑰匙圈
+﻿// Canvas html5 
+// mac 刪除git憑證  → Key 鑰匙圈
+// MAMP/db/mysql57  -> 路徑
+// Applications/MAMP/Library/bin/mysql -uroot -p        -> 從終端機開啟mysql
+// show create table tableName;
+// show variables like 'data%'   -> 找到資料庫存放地點
+// 在windows cmd ： set names big5;  -> 轉碼
+// set global 選縣名稱 = 新值
+// status -> 顯示連線資訊
+// kill id號碼(從status看)  -> 剔除使用者
+
 // 不等於： <>
 // 字串要加 ' '
 // LIKE '%'  → % 表示任意數量的字元(英文大小寫無分別)
@@ -85,7 +95,7 @@ T2 JOIN T1  →  每100筆資料去比對10筆資料
 
 // 新增單筆資料
 INSERT INTO 資料表 
-( 欄位 )
+( 欄位 )      -> 可省略
 VALUES 
 (欄位對應到的值)
 
@@ -98,17 +108,17 @@ UPDATE 資料表
 SET 欄位名稱 ＝ (新內容), 欄位名稱 ＝ (新內容)
 WHERE 指定的目標
 
-// 建立資料庫 (在終端機：mysql -uroot -p) (desc 資料表 －> 查看資料表)
+// 建立資料庫 (在終端機：mysql -u root -p root) (desc 資料表 －> 查看資料表)
 CREATE DATABASE 資料庫名稱(Ex: db08) default character set utf8;
 USE 資料庫;
 CREATE TABLE IF NOT EXISTS (資料庫名稱.)資料表名稱
 (
-  fid int auto_increment not null primary key,    -> 自動編號(primary key)
+  id int auto_increment not null primary key,    -> 自動編號(primary key)
   欄位名稱 欄位型態 欄位特性(可否null -> NULL/NOT NULL)
 )
 
 # 生成primary key
-fid int auto_increment not null primary key   // 在第一行寫
+id int auto_increment not null primary key   // 在第一行寫
 id int not null primary key         // 在第一行寫
 primary key (id)          // 在最後一行附註
 
@@ -141,14 +151,65 @@ DROP (資料表/資料庫)
 set sql_mode = 'traditional';   -> 會幫你驗證在列中新增不正確的值時，給予出錯的提示，並停止insert/update
 set sql_mode = '' -> DEFAULT
 
+// 條件約束(8.0以上才支援)        -> 條件式對多的那方設置
+// select version()   -> 查看版本
+ALTER TABLE 資料表名稱
+ADD CONSTRAINT 條件名稱 CHECK (條件);
+// 如果主鍵是自動編號，當條件約束啟動並發動，依然會使用到id
+
+Ex: 
+ALTER TABLE t2
+ADD CONSTRAINT chk_data CHECK (data >= 0);
+Ex: INSERT INTO(data) VALUES (-100)
+-> id 會被使用
+
+// 建立關聯
+ALTER TABLE 資料表名稱(多的那方)
+ADD CONSTRAINT 規則名稱
+FOREIGN KEY (外鍵欄位名稱) REFERENCES 資料表 (外鍵欄位名稱)
+Ex: 
+ALTER TABLE orders
+ADD CONSTRAINT fk_customer_orders
+FOREIGN KEY (customerId) REFERENCES customer (customerId);
+# on update cascade         -> 修改刪除會進行外鍵連動(其他資料表會受到異動)
+# on delete cascade;
+
+// 設立唯一值 unique
+I:  ALTER TABLE 資料表 CONSTRAINT 規則名稱 unique(欄位名稱,...);
+    ALTER TABLE customer CONSTRAINT uc unique(CompanyName);
+刪除： ALTER TABLE 資料表 DROP CONSTRAINT 規則名稱;
+      ALTER TABLE customer DROP CONSTRAINT uc;  -> 如果刪不掉就改下面方式刪掉
+II: CREATE unique INDEX 索引名稱 on 資料表(欄位名稱);
+    CREATE unique INDEX idx_company customer(CompanyName);
+刪除： DROP INDEX 索引名稱 on 資料表;
+      DROP INDEX idx_company on customer;
+
 // 新增索引
 CREATE INDEX 索引編號 on 資料表名稱(主排序欄位,副排序欄位,...)
 Ex: CREATE INDEX idx_tel on students(tel,name)
 -> 缺點：浪費硬碟空間，傳輸時間 (資源換速度)
 
 
+# engine
+engine = MyISAM;        // 無法復原 transaction 之前的檔案(不能rollback回到 start transaction之前)
+engine = InnoDB;        // 做任何事情都會留下紀錄(log檔)
+engine = Memory         // 將資料庫放在記憶體，適用在非永久性的資料
+engine = Federated      // 類似影子資料表，可透過影子資料表間接存取本尊資料表 -> connection = 'mysql://.../本尊資料表'
+// transaction
+start transaction    // 開始異動
+rollback transaction    // 否決異動
+commit transaction      // 確認異動
 
-// Canvas html5 
+// Merge      -> 連結兩個資料表
+create table Lab          // Merge union 不佔據記憶體 
+(
+  id int auto_increment unique,
+  data varchar(5) not null
+) engine = Merge union = (t1, t2) insert_method = first;      // insert_method = first;  Lab 在寫入新資料的時候會放入第一張資料表(t1)
+-- insert_method 選項： no | first | last
+insert into Lab (data) values ('rec3');
+
+
 
 # 美商供應的產品清單
 SELECT ProductID,ProductName,UnitPrice,SupplierID FROM products 

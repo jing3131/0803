@@ -7,17 +7,18 @@ create table Lab
   id int auto_increment primary key,
   data int not null
 ) engine = MyISAM;
--- ) engine = InnoDB;
+-- ) engine = InnoDB;     // 做任何事情都會留下紀錄(log檔)
 
 insert into Lab (data) values (100);
 
 select * from Lab;
 
-start transaction;
+start transaction;  // 開始異動
 
 update lab set data = 200 where id = 1;
 
--- rollback transaction;
+-- rollback transaction;  // 否決變動
+// commit transaction 確認變動
 rollback;
 
 select * from Lab;

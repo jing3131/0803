@@ -16,12 +16,12 @@ create table t2
   data varchar(5) not null
 ) engine = MyISAM;
 
-create table Lab
+create table Lab          // Merge union 不佔據記憶體
 (
   id int auto_increment unique,
   data varchar(5) not null
-) engine = Merge union = (t1, t2) insert_method = first;
--- insert_method �ﶵ: no | first | last
+) engine = Merge union = (t1, t2) insert_method = first;      // insert_method = first;  Lab 在寫入新資料的時候會放入第一張資料表(t1)
+-- insert_method 選項： no | first | last
 
 insert into t1 (data) values ('t1');
 insert into t2 (data) values ('t2');
