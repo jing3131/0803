@@ -4,7 +4,7 @@
 // Applications/MAMP/Library/bin/mysql -uroot -p        -> 從終端機開啟mysql
 // show create table tableName;
 // show variables like 'data%'   -> 找到資料庫存放地點
-// 在windows cmd ： set names big5;  -> 轉碼
+// 在windows cmd ： set names big5;  -> 轉碼    (show variables like 'char%')
 // set global 選縣名稱 = 新值
 // status -> 顯示連線資訊
 // kill id號碼(從status看)  -> 剔除使用者
@@ -208,6 +208,43 @@ create table Lab          // Merge union 不佔據記憶體
 ) engine = Merge union = (t1, t2) insert_method = first;      // insert_method = first;  Lab 在寫入新資料的時候會放入第一張資料表(t1)
 -- insert_method 選項： no | first | last
 insert into Lab (data) values ('rec3');
+
+
+# 使用者新增與權限：
+create user jeter identified by 'Pa$$w0rd';         // 建立使用者
+set password for carl = password('Pa$$w0rd');       // 重設密碼
+grant select on northwind.* to carl;                // 新增權限(SELECT的權限)
+revoke update on northwind.customers from carl;     // 收回權限(UPDATE的權限)
+
+
+// 備份
+在mysql外
+(mamp的資料夾)\mysqldump -u root  --database 資料庫名稱 > c:\temp\test_bak.txt(備份路徑)
+
+
+// 型態
+decimal(總長度,小數點後幾位)         // 小數點溢位就四捨五入
+datetime                          // YYYY-MM-DD 00:00:00    -> 如果資料錯誤在traditional下會被擋下
+timestamp                         // 沒有寫會直接自動加入新增(更新)的時間
+enum 定義允許值(只接受固定值)         // 1就是'Y', 2就是'N'
+data int(5) zerofill not null      // 前面不足的位數自動補 0
+data set('reading', 'music', 'sport') not null          // 三種選項任意排列組合
+
+
+# transaction
+// 不管哪種隔離等級，在update或delete都需下write lock
+set session transaction isolation level read committed; 
+// read committed 可以讀取任何"認可"(commit)的資料 可以再寫入的情況下讓其他人讀取資料，防止系統卡住
+set session transaction isolation level repeatable read;
+// repeatable read 重複讀取與最初相同的結果(即使有其他新值(已commit)，依然會讀取原本資料(commit前)) -> 在執行隔離期間不受到其他client端影響
+
+lock tables 資料表名稱 read(write);                   // 鎖定資料表變為唯讀直到unlock(write: 無法讀取直到unlock)
+unlock tables;
+write的優先權 > read
+lock in share mode
+/* start transaction              // 在 select 結尾for update -> 讀取的資料為已認可的(如果有人正在start transaction，就會進行等待)
+select .....for update */
+
 
 
 

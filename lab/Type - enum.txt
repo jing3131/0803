@@ -5,7 +5,7 @@ drop table Lab;
 create table Lab
 (
   id int auto_increment primary key,
-  data enum('Y', 'N') not null default 'Y',
+  data enum('Y', 'N') not null default 'Y',       // enum 定義允許值(只接受固定值)    -> 1就是'Y', 2就是'N'
   data2 int null
 );
 

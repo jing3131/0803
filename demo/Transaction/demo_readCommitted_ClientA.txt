@@ -1,6 +1,8 @@
 mysql> use northwind;
 Database changed
-mysql> set session transaction isolation level read committed;
+mysql> set session transaction isolation level read committed; 
+// read committed 可以讀取任何"認可"(commit)的資料 可以再寫入的情況下讓其他人讀取資料，防止系統卡住
+// 不管哪種隔離等級，在update或delete都需下write lock
 Query OK, 0 rows affected (0.00 sec)
 
 mysql> start transaction;

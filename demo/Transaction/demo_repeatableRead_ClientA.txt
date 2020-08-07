@@ -1,6 +1,7 @@
 mysql> use northwind;
 Database changed
-mysql> set session transaction isolation level repeatable read;
+mysql> set session transaction isolation level repeatable read;            ->  隔離等級  
+// repeatable read 重複讀取與最初相同的結果(即使有其他新值(已commit)，依然會讀取原本資料(commit前)) -> 在執行隔離期間不受到其他client端影響
 Query OK, 0 rows affected (0.00 sec)
 
 mysql> start transaction;

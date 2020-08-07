@@ -9,6 +9,17 @@ select categoryId, categoryName
   lines terminated by '\r\n'
   from categories;
 
+select categoryId, categoryName 
+  into outfile 'c:\\temp\\lab.txt' 
+  fields terminated by ',' optionally enclosed by '"' 
+  lines terminated by '\r\n'
+  from categories;
+
+  // fields terminated by ','   -> 將tab空格替換成','
+  // enclosed by '"'      -> 將文字前後加'"'
+  // optionally           -> 數字選擇不加'"'
+
+
 -- 準備稍後練習匯入時會用到資料庫與資料表
 create database LabIO;
 use LabIO;
@@ -27,10 +38,10 @@ create table categories
 -- Records: 10  Deleted: 2  Skipped: 0  Warnings: 2
 
 load data infile 'c:\\temp\\lab.txt'
-  replace
+  replace                                 // 如果編號相同就覆蓋掉
   into table categories
   LINES TERMINATED BY '\r\n';
-  -- ignore 2 lines;
+  -- ignore 2 lines;                      // 忽略(跳過)前兩行
 
 select * from categories;
 
@@ -47,7 +58,7 @@ create table categories
 
 
 load data infile 'c:\\temp\\lab.txt'
-  ignore
+  ignore                              // 相同就忽略
   into table categories
   LINES TERMINATED BY '\r\n';
 

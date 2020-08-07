@@ -9,7 +9,7 @@ create table Lab
 );
 
 insert into Lab (data) values ('123');
-insert into Lab (data) values ('1234567');
+insert into Lab (data) values ('1234567');      ->  如果sql_mode='traditional' 會顯示錯誤
 insert into Lab (data) values (' 12 ');
 
 select id, concat('*', data, '*') as dataField

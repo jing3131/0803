@@ -5,7 +5,7 @@ drop table Lab;
 create table Lab
 (
   id int auto_increment primary key,
-  data set('reading', 'music', 'sport') not null
+  data set('reading', 'music', 'sport') not null          // 三種選項任意排列組合
 );
 
 insert into Lab (data) values ('reading,sport');
@@ -13,5 +13,5 @@ insert into Lab (data) values ('sport,reading,music');
 insert into Lab (data) values ('music,reading');
 
 select * from Lab;
-select * from Lab where find_in_set('music', data);
+select * from Lab where find_in_set('music', data);       // find_in_set 搜尋set特定資料
 
