@@ -3,3 +3,87 @@ cy公司打算建立一個訂便當的系統，流程可隨意安排
 有哪些廠商，
 2. 新增幾筆會員，幾個菜單，種類，可加入外鍵
 3. 最後下一個簡單的select句子(select * from ~~~)
+
+// 建立關聯
+ALTER TABLE 資料表名稱(多的那方)
+ADD CONSTRAINT 規則名稱
+FOREIGN KEY (外鍵欄位名稱) REFERENCES 資料表 (外鍵欄位名稱)
+
+
+Restaurant : RestaurantID, MenuID, Address
+Menu : MenuID
+Food : FoodID, MenuID, FoodName, UnitPrice
+Groups : GroupID, GroupName
+Employee : EmployeeID, GroupID, Name, Address
+OrderDetail : OrdersID, RestaurantID, MenuID, FoodID, Quantity, UnitPrice
+Orders : OrderID, GroupID, OrderDate, RestaurantID
+
+
+CREATE DATABASE cyDinbendon;
+
+CREATE TABLE Restaurant(
+    RestaurantID int AUTO_INCREMENT PRIMARY KEY,
+    MenuID int not null,
+   	Address varchar(30)
+);
+
+CREATE TABLE Menu(
+    MenuID int AUTO_INCREMENT PRIMARY KEY
+);
+
+CREATE TABLE Food(
+    FoodID int AUTO_INCREMENT PRIMARY KEY,
+    MenuID int not null,
+    FoodName varchar(15) not null,
+    UnitPrice int not null
+);
+
+CREATE TABLE Groups(
+    GroupID int AUTO_INCREMENT PRIMARY KEY,
+    GroupName varchar(15) not null
+);
+
+CREATE TABLE Employee(
+    EmployeeID int AUTO_INCREMENT PRIMARY KEY,
+    GroupID int not null,
+    Name varchar(10) not null,
+    Address varchar(30)
+);
+
+CREATE TABLE OrderDetail(
+    OrderID int not null,
+    RestaurantID int not null,
+    MenuID int not null,
+    FoodID int not null,
+    Quantity int not null,
+    UnitPrice int not null
+);
+
+CREATE TABLE Orders(
+    OrderID int AUTO_INCREMENT PRIMARY KEY,
+    GroupID int not null,
+    OrderDate date not null,
+    RestaurantID int not null
+);
+
+# 建立restaurant_menu關聯
+ALTER TABLE Restaurant
+ADD CONSTRAINT fk_rest_menu
+FOREIGN KEY (MenuID) REFERENCES Menu(MenuID)
+
+# 建立food_menu關聯
+ALTER TABLE Food
+ADD CONSTRAINT fk_food_menu
+FOREIGN KEY (MenuID) REFERENCES Menu(MenuID)
+
+ALTER TABLE Employee
+ADD CONSTRAINT fk_emp_grp
+FOREIGN KEY (GroupID) REFERENCES Groups(GroupID)
+
+ALTER TABLE Orders
+ADD CONSTRAINT fk_odr_grp
+FOREIGN KEY (GroupID) REFERENCES Groups(GroupID)
+
+ALTER TABLE Orders
+ADD CONSTRAINT fk_odr_rest
+FOREIGN KEY (RestaurantID) REFERENCES Restaurant(RestaurantID)
